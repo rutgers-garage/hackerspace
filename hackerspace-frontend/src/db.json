@@ -1,0 +1,32 @@
+{
+    "items": [
+        {
+            "name": "Arduino Uno", 
+            "quantity": 16
+        },
+        {
+            "name": "Raspberry Pi", 
+            "quantity": 16
+        },
+        {
+            "name": "Raspberry Pi Zero", 
+            "quantity": 16
+        }
+    ],
+    
+    "checkouts": [
+        {
+            "name": "Ali Mohamad",
+            "class": "2021",
+            "netid": "aam345",
+            "email": "aam345@rutgers.edu",
+            "checkout": [
+                {
+                    "name": "Raspberry Pi",
+                    "quantity": 2
+                }
+            ]
+        }
+    ]
+    
+}
