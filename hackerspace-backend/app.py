@@ -51,17 +51,6 @@ def new_checkout():
     return "done"
 
 
-@app.route('/dashboard', methods=['GET'])
-def get_checkins():
-    db = requests.get("https://api.myjson.com/bins/rqa1u").json()
-
-    print(db['checkouts'])
-
-    response = { "checkouts": db['checkouts'] }
-    
-    return jsonify(response)
-
-
 @app.route('/checkin', methods=['POST'])
 def check_in():
     # Base Data
@@ -69,8 +58,8 @@ def check_in():
     db = requests.get("https://api.myjson.com/bins/rqa1u").json()
 
     # Variables for Modification
-    item_check_in = checkin_request['checkin']['name']
-    quantity_check_in = checkin_request['checkin']['quantity']
+    item_check_in = checkin_request['item']
+    quantity_check_in = checkin_request['quantity']
 
     # Validation Checks
     item = [x for x in db['items'] if x['name'] == item_check_in][0]
@@ -79,13 +68,23 @@ def check_in():
     if len(user) == 0:
         return "User not found in database"
     else:
-        checkin_item = [x for x in user[0]['checkout'] if x['name'] == checkin_request['checkin']['name']]
+        checkin_item = [x for x in user[0]['checkout'] if x['name'] == checkin_request['item']]
+        count = 0;
         if len(checkin_item) == 0:  # If the user has never checked this item out before...
             return "Item not checked out by user"
         else:  # If the user already has some of this item checked out...
-            checkin_item[0]['quantity'] -= checkin_request['checkin']['quantity']
+            if checkin_item[0]['quantity'] < checkin_request['quantity'] :
+                return "User only has " + str(checkin_item[0]['quantity']) + " items checked out"
+            if checkin_item[0]['quantity'] - checkin_request['quantity'] == 0:  # If all items were returned...
+                for x in user[0]['checkout'] :
+                    if x['name'] == checkin_request['item'] :
+                        break;
+                    count+=1;
+                user[0]['checkout'].pop(count) #Not in list
+            else:
+                checkin_item[0]['quantity'] -= checkin_request['quantity']
             item['quantity'] += quantity_check_in
-            # if checkin_item[0]['quantity'] == 0:  # If all items were returned...
+
 
     requests.put("https://api.myjson.com/bins/rqa1u", json=db)
     return "done"
