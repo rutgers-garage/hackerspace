@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-//import * as db from './db.json';
+
+import CheckoutTable from './CheckoutTable.js'
 
 class  Dashboard extends React.Component {
   
@@ -10,32 +11,50 @@ class  Dashboard extends React.Component {
         super();
         
         this.state = { 
-            items: [],
-            checkouts: [],
-            quantityRequested: 0 
+            checkouts: []
         };
-        
-        this.handleChange = this.handleChange.bind(this);
-        
-        this.saveRequest = this.saveRequest.bind(this);
+
+        this.buildCheckoutList = this.buildCheckoutList.bind(this);
 
     }
     
-    handleChange(){
-        
-    }
-    
+    // API Call to Database
     componentDidMount(){
         
-        fetch("https://api.myjson.com/bins/16uxbr")
+        let backend_endpoint = "https://c3a04182.ngrok.io";
+
+        fetch(backend_endpoint + "/dashboard")
             .then( (res) => res.json() )
-            .then( (data) => { this.setState({items: data.items, checkouts: data.checkouts}) });
+            .then( (data) => { this.setState({checkouts: data.checkouts})});
     
+    }
+
+    buildCheckoutList(){
+        let checkouts = this.state.checkouts;
+
+        let x = [];
+
+        for(let i = 0; i < checkouts.length; i++){
+
+            let element = (
+                <div key = {i}>
+                    <h1>Name: {checkouts[i].name}</h1>
+                    <CheckoutTable netid = {checkouts[i].netId} checkout = {checkouts[i].checkout} />
+                </div>
+            )
+
+            x.push(element);
+        }
+
+        return x;
+
     }
     
     render(){
         return (
-            <p>{this.state.items}, {this.state.checkouts}</p>
+            <div>
+                {this.buildCheckoutList()}
+            </div>
         );
     }
 }

@@ -51,6 +51,17 @@ def new_checkout():
     return "done"
 
 
+@app.route('/dashboard', methods=['GET'])
+def get_checkins():
+    db = requests.get("https://api.myjson.com/bins/rqa1u").json()
+
+    print(db['checkouts'])
+
+    response = { "checkouts": db['checkouts'] }
+    
+    return jsonify(response)
+
+
 @app.route('/checkin', methods=['POST'])
 def check_in():
     # Base Data
