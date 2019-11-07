@@ -53,8 +53,8 @@ class Hardware extends React.Component{
             let quantity = raw[i].quantity;
             
             let item = <tr key = {i} className =  "list-item"> 
-                <td> Name: {name} </td>
-                <td> Quantity: {quantity} </td>
+                <td> {name} </td>
+                <td> {quantity} </td>
 
                 <td> <input onChange = { this.handleChange } type="text" name="fname" className = "quantity-request"></input> </td>
 
