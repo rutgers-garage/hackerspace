@@ -56,7 +56,7 @@ class Hardware extends React.Component{
                 <td> {name} </td>
                 <td> {quantity} </td>
 
-                <td> <input onChange = { this.handleChange } type="text" name="fname" className = "quantity-request"></input> </td>
+                <td> <input onChange = { this.handleChange } type="number" placeholder="0" name="fname" className = "quantity-request"></input> </td>
 
                 <td> 
                     <Link to = {{pathname: "/checkout",  
@@ -88,7 +88,6 @@ class Hardware extends React.Component{
                             <th> Item Name </th>
                             <th> Quantity Available </th>
                             <th> Quantity Requested </th>
-                            <th> Checkout </th>
                         </tr>
 
                         { this.createItemList() }

@@ -1,21 +1,33 @@
+:root {
+  font-size: 18px;
+}
+
 .App {
   text-align: center;
 }
 
-.hardware-list{
-    list-style: none;
-    width: 50%;
-    margin-left: 25%;
+.hardware-list {
+  list-style: none;
+  width: 50%;
+  margin-left: 25%;
 }
 
 .list-item {
-    background-color: white;  
+  background-color: white;
 }
 
 .list-item:nth-child(odd) {
-    background-color: lightgray;
+  background-color: #f0ebe4;
 }
 
-.quantity-request{
-    width: 25%;
+.hardware-list td {
+  padding: 16px 0;
+}
+
+.quantity-request {
+  width: 100%;
+  font-size: 1rem;
+  border: none;
+  background: transparent;
+  text-align: center;
 }
