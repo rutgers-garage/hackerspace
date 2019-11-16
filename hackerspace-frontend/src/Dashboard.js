@@ -21,7 +21,7 @@ class  Dashboard extends React.Component {
     // API Call to Database
     componentDidMount(){
         
-        let backend_endpoint = "https://c3a04182.ngrok.io";
+        let backend_endpoint = "https://dd6cf5de.ngrok.io";
 
         fetch(backend_endpoint + "/dashboard")
             .then( (res) => res.json() )
@@ -35,7 +35,9 @@ class  Dashboard extends React.Component {
         let x = [];
 
         for(let i = 0; i < checkouts.length; i++){
-
+            
+            if (checkouts[i].checkout.length === 0){ continue; }
+            
             let element = (
                 <div key = {i}>
                     <h1>Name: {checkouts[i].name}</h1>

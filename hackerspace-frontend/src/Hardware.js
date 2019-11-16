@@ -18,7 +18,7 @@ class Hardware extends React.Component {
 
   // API Call to Database
   componentDidMount() {
-    fetch("https://api.myjson.com/bins/16uxbr")
+    fetch("https://dd6cf5de.ngrok.io/")
       .then(res => res.json())
       .then(data => {
         this.setState({ items: data.items });

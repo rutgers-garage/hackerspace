@@ -7,7 +7,6 @@ class Checkout extends React.Component {
     super();
 
     this.state = {
-      db: {},
       request: {}
     };
 
@@ -17,14 +16,8 @@ class Checkout extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://5ddfcb0f.ngrok.io")
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ db: data });
-      });
-
+    
     let request = this.retrieveRequest();
-
     this.setState({ request: request });
   }
 
@@ -55,13 +48,13 @@ class Checkout extends React.Component {
       email: email,
       checkout: {
         name: request[0],
-        quantity: request[2]
+        quantity: parseInt(request[2])
       }
     };
 
     console.log(body);
 
-    fetch("https://5ddfcb0f.ngrok.io/checkout", {
+    fetch("https://dd6cf5de.ngrok.io/checkout", {
       method: "POST",
       mode: "cors",
       headers: {
