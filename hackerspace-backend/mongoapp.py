@@ -33,20 +33,14 @@ def new_checkout():
 
 
     # Actual Changes
-    for document in items.find({}, projection = {"_id" : False}):
-        if document["name"] == item_checked_out:  # Change amount available in ledger
-            items.update_one(document, {"$set": { "quantity": document["quantity"] - quantity_checked_out } } )   # Change amount available in ledger
-            break
+    item = items.find_one({"name": item_checked_out}, projection={"_id": False})
+    items.update_one(item, {"$set": {"quantity": item["quantity"] - quantity_checked_out}})   # Change amount available in ledger
 
-    exist = 0
-    user = {}
-    for document in checkouts.find({}, projection={"_id": False}): # Identify if this is a new or old user.
-        if document["netId"] == checkout_request['netId']:
-            exist = 1
-            user = document
-            break
 
-    if exist == 0:  # If this is a new user...
+    user = checkouts.find_one({"netId": checkout_request['netId']}, projection = {"_id": False}) # Identify if this is a new or old user.
+
+
+    if user is None:  # If this is a new user...
         user_checkout = {
             "name": checkout_request['name'],
             "netId": checkout_request['netId'],
@@ -63,13 +57,12 @@ def new_checkout():
             if checkout["name"] == checkout_request['checkout']['name']:
                 checked_out = 1
                 checkout["quantity"] = checkout["quantity"] + checkout_request['checkout']['quantity']
-                print(checkout["quantity"])
+
             edit_checkout.append(checkout)
         if checked_out == 0:  # If the user has never checked this item out before...
             edit_checkout.append(checkout_request['checkout'])
-        for document in checkouts.find({}, projection={"_id": False}):  # Identify if this is a new or old user.
-            if document["netId"] == checkout_request['netId']:
-                checkouts.update(document, {"$set": {"checkout": edit_checkout} })
+        updated_user = checkouts.find_one({"netId": checkout_request['netId']}, projection = {"_id": False})
+        checkouts.update(updated_user, {"$set": {"checkout": edit_checkout} })
     return "done"
 
 
@@ -79,31 +72,26 @@ def check_in():
     checkin_request = request.get_json()
     db = client["hackerspace"]
     items = db["items"]
-    checkouts_collection = db["checkouts"]
 
     # Variables for Modification
     item_check_in = checkin_request['item']
     quantity_check_in = checkin_request['quantity']
 
     # Validation Checks
+    user = db["checkouts"].find_one({"netId": checkin_request['netId']}, projection={"_id": False})
 
-    user = {}
-    len = 0
-    for document in checkouts_collection.find({}, projection={"_id": False}):
-        if document["netId"] == checkin_request['netId']:
-            len = 1
-            user = document
-            break
     # If the user is not found...
-    if len == 0:
+    if user is None:
         return "User not found in database"
     else:
         taken = 0
         update_checkout = []
         checkin_item = {}
-        for checkouts in user["checkout"] :
-            taken = 1
-            checkin_item = checkouts
+        for checkouts in user["checkout"]:
+            if checkouts["name"]  == checkin_request['item'] :
+                taken = 1
+                checkin_item = checkouts
+                break
 
 
 
@@ -116,21 +104,18 @@ def check_in():
                 for checkout in user["checkout"]:
                     if checkout["name"] == checkin_request['item']:
                         checkout["quantity"] = checkout["quantity"] - quantity_check_in
+
                         if checkout["quantity"] == 0:    #If there is no more items checked out
                             continue
-
                     update_checkout.append(checkout)
 
-            for document in items.find({}, projection={"_id": False}):
-                if document["name"] == item_check_in:
-                    items.update_one(document, {"$set": {"quantity": document["quantity"] + quantity_check_in}})
-                    break
+            returned_item = items.find_one({"name": item_check_in}, projection={"_id": False})  #Increment Returned Item
+            items.update_one(returned_item, {"$set": {"quantity": returned_item["quantity"] + quantity_check_in}})
 
-            for document in checkouts_collection.find({}, projection={"_id": False}):
-                if document["netId"] == checkin_request['netId']:
-                    checkouts_collection.update(document, {"$set": {"checkout": update_checkout}})
-                    return "done"
-    return "done"
+            updated_user = db["checkouts"].find_one({"netId": checkin_request['netId']}, projection={"_id": False})
+            db["checkouts"].update_one(updated_user, {"$set": {"checkout": update_checkout}})
+            return "done"
+
 
 
 @app.route('/dashboard', methods=['GET'])
