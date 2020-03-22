@@ -1,21 +1,75 @@
-.App {
-  text-align: center;
+:root {
+  font-size: 20px;
 }
 
-.hardware-list{
-    list-style: none;
-    width: 50%;
-    margin-left: 25%;
+.App {
+  text-align: left;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+
+.hardware-list {
+  list-style: none;
+  width: 100%;
 }
 
 .list-item {
-    background-color: white;  
+  background-color: white;
 }
 
-.list-item:nth-child(odd) {
-    background-color: lightgray;
+.hardware-list {
+  padding: 16px;
+  border-collapse: collapse;
 }
 
-.quantity-request{
-    width: 25%;
+.quantity-request {
+  width: 100%;
+  margin: auto;
+
+  border: none;
+  background: transparent;
+  text-align: center;
+}
+
+th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #30404d;
+  padding: 16px 0;
+}
+
+.hardware-list td {
+  padding: 20px 0;
+  white-space: pre;
+}
+
+td:last-child {
+  padding-left: 16px;
+}
+tr:first-of-type {
+  border-bottom: 1px solid #d8e1e8;
+}
+
+td:first-of-type {
+  text-align: left;
+}
+
+tr {
+  border-radius: 4px;
+  transition: 0.1s ease background-color;
+}
+
+tr:not(:first-child):hover {
+  background-color: #f5f8fa;
+}
+
+tr:not(:first-child):hover input[type="number"] {
+  background-color: #ebf1f5;
 }

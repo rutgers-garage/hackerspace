@@ -14,18 +14,17 @@ class CheckoutTable extends React.Component {
         event.preventDefault();
         let user = this.props.netid;
         let item = event.target.name.value;
-        let quantityOut = event.target.quantityout.value;
         let quantityReturned = event.target.quantityreturned.value;
 
         let body =  {
             netId: user, 
             item: item, 
-            quantity: quantityReturned
+            quantity: parseInt(quantityReturned)
         };
         
         console.log(body);
         
-        fetch("https://5ddfcb0f.ngrok.io/checkin", {
+        fetch("https://dd6cf5de.ngrok.io/checkin", {
             'method': 'POST',
             'mode': 'cors',
             'headers': {
